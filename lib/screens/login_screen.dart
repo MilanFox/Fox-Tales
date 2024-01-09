@@ -31,7 +31,7 @@ class _RegisterScreenState extends State<LoginScreen> {
     _formKey.currentState!.save();
 
     try {
-      final userCredentials = await _firebase.signInWithEmailAndPassword(
+      await _firebase.signInWithEmailAndPassword(
         email: _email,
         password: _password,
       );
