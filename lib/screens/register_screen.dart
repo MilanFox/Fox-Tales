@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 final _firebase = FirebaseAuth.instance;
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key});
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() {
@@ -59,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('FoxTales')),
+      appBar: AppBar(title: const Text('Register New User')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
