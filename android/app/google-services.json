@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "853253749657",
+    "project_id": "foxtales-app",
+    "storage_bucket": "foxtales-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853253749657:android:3f5447b1239ee58830b108",
+        "android_client_info": {
+          "package_name": "com.example.fox_tales"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBrrlVsalmjhMUHTPWt7SBO9F4qgljp0g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
