@@ -19,10 +19,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var _name = "";
   var _email = "";
   var _password = "";
+  bool _isLoading = false;
 
   void _submit() async {
     final isValid = _formKey.currentState!.validate();
-    if (!isValid) return;
+    if (!isValid || _isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
     _formKey.currentState!.save();
 
     try {
@@ -38,9 +44,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(err.message ?? 'Unknown Authntication Error.'),
+          content: Text(err.message ?? 'Unknown Authentication Error.'),
         ),
       );
+    } finally {
+      if (context.mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -97,7 +109,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              Button('Register', _submit),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : Button('Register', _submit),
             ],
           ),
         ),

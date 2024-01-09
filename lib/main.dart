@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fox_tales/data/colors.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fox_tales/screens/register_screen.dart';
@@ -19,8 +20,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'FoxTales',
       theme: ThemeData().copyWith(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 191, 122, 104)),
+        colorScheme: ColorScheme.fromSeed(seedColor: primary),
       ),
       home: const Scaffold(body: RegisterScreen()),
     );
