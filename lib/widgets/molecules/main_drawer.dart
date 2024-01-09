@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_tales/screens/register_screen.dart';
 
@@ -18,11 +19,18 @@ class _MainDrawerState extends State<MainDrawer> {
         children: [
           DrawerHeader(child: Text('Settings')),
           ListTile(
-            title: Text('Register User'),
+            title: Text('Register New User'),
             leading: Icon(Icons.app_registration),
             onTap: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (ctx) => RegisterScreen()));
+            },
+          ),
+          ListTile(
+            title: Text('Logout'),
+            leading: Icon(Icons.logout),
+            onTap: () {
+              FirebaseAuth.instance.signOut();
             },
           ),
         ],
