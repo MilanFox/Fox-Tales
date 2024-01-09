@@ -58,61 +58,64 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Invalid Name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _name = value!;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Email Address'),
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                textCapitalization: TextCapitalization.none,
-                validator: (value) {
-                  if (value == null ||
-                      value.trim().isEmpty ||
-                      !value.contains('@')) {
-                    return 'Invalid Email';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _email = value!;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
-                autocorrect: false,
-                validator: (value) {
-                  if (value == null || value.trim().length < 6) {
-                    return 'Password too short. Must be 6 characters or more.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _password = value!;
-                },
-              ),
-              const SizedBox(height: 20),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : Button('Register', _submit),
-            ],
+    return Scaffold(
+      appBar: AppBar(title: const Text('FoxTales')),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Invalid Name';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _name = value!;
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Email Address'),
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
+                  textCapitalization: TextCapitalization.none,
+                  validator: (value) {
+                    if (value == null ||
+                        value.trim().isEmpty ||
+                        !value.contains('@')) {
+                      return 'Invalid Email';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _email = value!;
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  autocorrect: false,
+                  validator: (value) {
+                    if (value == null || value.trim().length < 6) {
+                      return 'Password too short. Must be 6 characters or more.';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _password = value!;
+                  },
+                ),
+                const SizedBox(height: 20),
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : Button('Register', _submit),
+              ],
+            ),
           ),
         ),
       ),
