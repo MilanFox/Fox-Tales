@@ -7,12 +7,15 @@ import 'package:fox_tales/screens/login_screen.dart';
 import 'package:fox_tales/widgets/molecules/main_navigation.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await dotenv.load();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseFirestore.instance.settings =
+      const Settings(persistenceEnabled: true);
   runApp(const App());
 }
 

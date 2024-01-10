@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fox_tales/models/post.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class FeedEntry extends StatelessWidget {
   final Post post;
@@ -18,7 +19,13 @@ class FeedEntry extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Center(child: Image.network(post.imageUrl)),
+            Center(
+              child: CachedNetworkImage(
+                imageUrl: post.imageUrl,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+            ),
             const SizedBox(height: 16),
             Text(
               post.createdAt,
