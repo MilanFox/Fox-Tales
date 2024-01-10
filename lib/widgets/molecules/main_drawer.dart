@@ -30,11 +30,9 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     ),
   ];
 
-  final _uid = FirebaseAuth.instance.currentUser!.uid;
-
   @override
   Widget build(BuildContext context) {
-    bool _isAdmin = ref.watch(rolesProvider)['admins'].contains(_uid);
+    bool isAdmin = ref.watch(rolesProvider)['isAdmin'];
 
     return Drawer(
       backgroundColor: Colors.white,
@@ -57,8 +55,8 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
             ),
           ),
           Text(
-              '${FirebaseAuth.instance.currentUser!.displayName!} (${_isAdmin ? "Admin" : "Watcher"})'),
-          _isAdmin
+              '${FirebaseAuth.instance.currentUser!.displayName!} (${isAdmin ? "Admin" : "Watcher"})'),
+          isAdmin
               ? Expanded(
                   child: ListView.builder(
                     itemCount: _screens.length,
