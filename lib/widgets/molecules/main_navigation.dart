@@ -44,18 +44,38 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'FoxTales',
-          style: TextStyle(fontFamily: 'Tahu', fontSize: 40),
-        ),
-        backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: AppBar(
+              title: const Text(
+                'FoxTales',
+                style: TextStyle(fontFamily: 'Tahu', fontSize: 40),
+              ),
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.white,
+            ),
+          ),
+          Expanded(
+            child: _screens[_pageIndex].screen,
+          ),
+        ],
       ),
       drawer: const MainDrawer(),
-      body: _screens[_pageIndex].screen,
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _pageIndex,
+        backgroundColor: Colors.white,
         onTap: _selectPage,
         items: _screens
             .map((screen) => BottomNavigationBarItem(

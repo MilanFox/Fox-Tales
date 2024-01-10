@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:fox_tales/data/colors.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -56,10 +57,13 @@ class _UploadScreenState extends State<UploadScreen> {
     await storageRef.putFile(_image!);
     final imageURL = await storageRef.getDownloadURL();
 
-    FirebaseFirestore.instance.collection('public_feed').add({
+    FirebaseFirestore.instance
+        .collection('public_feed')
+        .doc(DateTime.now().millisecondsSinceEpoch.toString())
+        .set({
       'image_url': imageURL,
       'description': _descriptionController.text,
-      'createdAt': Timestamp.now(),
+      'createdAt': DateFormat('dd.MM.yyyy').format(DateTime.now()),
     });
 
     setState(() {
