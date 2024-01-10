@@ -59,7 +59,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register New User')),
+      appBar: AppBar(
+        title: const Text('Register New User'),
+        backgroundColor: Colors.white,
+      ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
