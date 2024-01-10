@@ -4,7 +4,7 @@ import 'package:fox_tales/models/post.dart';
 class FeedEntry extends StatelessWidget {
   final Post post;
 
-  const FeedEntry(this.post, {super.key});
+  const FeedEntry(this.post, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,15 @@ class FeedEntry extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 8),
-            Text(post.description),
+            Visibility(
+              visible: post.description.isNotEmpty,
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Text(post.description),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -61,9 +61,10 @@ class _UploadScreenState extends State<UploadScreen> {
         .collection('public_feed')
         .doc(DateTime.now().millisecondsSinceEpoch.toString())
         .set({
-      'image_url': imageURL,
+      'imageUrl': imageURL,
       'description': _descriptionController.text,
       'createdAt': DateFormat('dd.MM.yyyy').format(DateTime.now()),
+      'timestamp': DateTime.now().millisecondsSinceEpoch
     });
 
     setState(() {
