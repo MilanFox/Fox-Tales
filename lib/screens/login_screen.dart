@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fox_tales/providers/favorites_provider.dart';
 import 'package:fox_tales/widgets/atoms/button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 final _firebase = FirebaseAuth.instance;
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() {
+  ConsumerState<LoginScreen> createState() {
     return _RegisterScreenState();
   }
 }
 
-class _RegisterScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   var _email = "";
@@ -47,6 +49,7 @@ class _RegisterScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = false;
       });
+      ref.read(favoritesProvider.notifier).loadRemoteFavorites();
     }
   }
 

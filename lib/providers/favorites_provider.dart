@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fox_tales/models/post.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart' as path;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<Database> _getDatabase() async {
   final dbPath = await sql.getDatabasesPath();
@@ -20,10 +22,10 @@ Future<Database> _getDatabase() async {
 
 class FavoritesNotifier extends StateNotifier<List<Post>> {
   FavoritesNotifier() : super([]) {
-    loadFavorites();
+    loadLocalFavorites();
   }
 
-  void loadFavorites() async {
+  void loadLocalFavorites() async {
     final db = await _getDatabase();
     final data = await db.query('favorite_posts');
     final favorites = data
@@ -34,6 +36,39 @@ class FavoritesNotifier extends StateNotifier<List<Post>> {
             timeStamp: entry['timeStamp'] as int))
         .toList();
     state = favorites;
+  }
+
+  void updateLocalFavorites(List<Post> favorites) async {
+    final db = await _getDatabase();
+    await db.delete('favorite_posts');
+    for (final post in favorites) {
+      await db.insert('favorite_posts', {
+        'timeStamp': post.timeStamp,
+        'imageUrl': post.imageUrl,
+        'createdAt': post.createdAt,
+        'description': post.description,
+      });
+    }
+  }
+
+  Future<void> loadRemoteFavorites() async {
+    final dataSnapshot = await FirebaseFirestore.instance
+        .collection('userData')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    final data = dataSnapshot.data()!['favorites'] as List<dynamic>;
+
+    final favorites = data
+        .map((entry) => Post(
+            createdAt: entry['createdAt'] as String,
+            description: entry['description'] as String,
+            imageUrl: entry['imageUrl'] as String,
+            timeStamp: entry['timeStamp'] as int))
+        .toList();
+
+    state = favorites;
+    updateLocalFavorites(favorites);
   }
 
   void toggleFavoriteStatus(Post post) async {
@@ -48,13 +83,19 @@ class FavoritesNotifier extends StateNotifier<List<Post>> {
     } else {
       state = [...state, post];
 
-      db.insert('favorite_posts', {
+      await db.insert('favorite_posts', {
         'timeStamp': post.timeStamp,
         'imageUrl': post.imageUrl,
         'createdAt': post.createdAt,
         'description': post.description,
       });
     }
+
+    final userDocRef = FirebaseFirestore.instance
+        .collection('userData')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+
+    userDocRef.set({'favorites': state.map((post) => post.toMap()).toList()});
   }
 }
 
