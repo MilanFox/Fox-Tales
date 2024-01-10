@@ -12,6 +12,8 @@ class MessagesScreen extends StatefulWidget {
 class _MessagesScreenState extends State<MessagesScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Text('Messages');
+    return const Center(
+      child: Text("You have not been added to any groups yet."),
+    );
   }
 }

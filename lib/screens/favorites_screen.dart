@@ -18,11 +18,13 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     final favorites = List.from(ref.watch(favoritesProvider));
     favorites.sort((a, b) => b.timeStamp.compareTo(a.timeStamp));
 
-    return ListView.builder(
-      itemCount: favorites.length,
-      itemBuilder: (ctx, index) {
-        return FeedEntry(favorites[index]);
-      },
-    );
+    return favorites.isEmpty
+        ? const Center(child: Text('You have not added any favorites yet.'))
+        : ListView.builder(
+            itemCount: favorites.length,
+            itemBuilder: (ctx, index) {
+              return FeedEntry(favorites[index]);
+            },
+          );
   }
 }
