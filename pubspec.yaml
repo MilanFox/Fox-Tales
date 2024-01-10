@@ -13,12 +13,14 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   flutter_dotenv: ^5.1.0
-  uuid: ^4.3.2
   firebase_storage: ^11.6.0
   image_picker: ^1.0.7
   cloud_firestore: ^4.14.0
   intl: ^0.19.0
   cached_network_image: ^3.3.1
+  flutter_riverpod: ^2.4.9
+  sqflite: ^2.3.0
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
