@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_tales/widgets/atoms/button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,6 +39,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       User user = userCredentials.user!;
       await user.updateDisplayName(_name);
+
+      final userDocRef = FirebaseFirestore.instance
+          .collection('userData')
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+
+      await userDocRef.set({'favorites': []});
+
       _formKey.currentState?.reset();
     } on FirebaseAuthException catch (err) {
       if (!context.mounted) return;

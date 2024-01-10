@@ -1,20 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fox_tales/data/colors.dart';
 import 'package:fox_tales/models/screen.dart';
+import 'package:fox_tales/providers/roles_provider.dart';
 import 'package:fox_tales/screens/register_screen.dart';
 import 'package:fox_tales/screens/upload_screen.dart';
 
-class MainDrawer extends StatefulWidget {
+class MainDrawer extends ConsumerStatefulWidget {
   const MainDrawer({super.key});
 
   @override
-  State<MainDrawer> createState() {
+  ConsumerState<MainDrawer> createState() {
     return _MainDrawerState();
   }
 }
 
-class _MainDrawerState extends State<MainDrawer> {
+class _MainDrawerState extends ConsumerState<MainDrawer> {
   final List<Screen> _screens = [
     Screen(
       icon: const Icon(Icons.upload),
@@ -28,8 +30,12 @@ class _MainDrawerState extends State<MainDrawer> {
     ),
   ];
 
+  final _uid = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
+    bool _isAdmin = ref.watch(rolesProvider)['admins'].contains(_uid);
+
     return Drawer(
       backgroundColor: Colors.white,
       child: Column(
@@ -50,23 +56,28 @@ class _MainDrawerState extends State<MainDrawer> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _screens.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_screens[index].label),
-                  leading: _screens[index].icon,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (ctx) => _screens[index].screen),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+          Text(
+              '${FirebaseAuth.instance.currentUser!.displayName!} (${_isAdmin ? "Admin" : "Watcher"})'),
+          _isAdmin
+              ? Expanded(
+                  child: ListView.builder(
+                    itemCount: _screens.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(_screens[index].label),
+                        leading: _screens[index].icon,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (ctx) => _screens[index].screen),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                )
+              : const Spacer(),
           ListTile(
             iconColor: primary,
             title: const Text(
