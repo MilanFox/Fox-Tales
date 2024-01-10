@@ -50,5 +50,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Uploading Photos to the Image Hosting Service. If you don't plan to upload, feel free to decline.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Uploading Photos to the Image Hosting Service. If you don't plan to upload, feel free to decline.</string>
 </dict>
 </plist>
