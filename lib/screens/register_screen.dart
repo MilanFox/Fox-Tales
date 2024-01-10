@@ -46,6 +46,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       await userDocRef.set({'favorites': []});
 
+      final userListRef =
+          FirebaseFirestore.instance.collection('appData').doc('users');
+
+      await userListRef.update({
+        'list': FieldValue.arrayUnion([
+          {'name': _name, 'uid': user.uid}
+        ])
+      });
+
       _formKey.currentState?.reset();
     } on FirebaseAuthException catch (err) {
       if (!context.mounted) return;
