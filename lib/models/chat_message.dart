@@ -4,11 +4,12 @@ class ChatMessage {
   ChatMessage({
     required this.user,
     required this.message,
-  });
+    int? timestamp,
+  }) : timestamp = timestamp ?? DateTime.now().millisecondsSinceEpoch;
 
   final AppUser user;
   final String message;
-  final timestamp = DateTime.now().millisecondsSinceEpoch;
+  final int timestamp;
 
   Map<String, dynamic> toMap() {
     return {
