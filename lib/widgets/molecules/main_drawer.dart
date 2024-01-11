@@ -6,6 +6,7 @@ import 'package:fox_tales/models/screen.dart';
 import 'package:fox_tales/providers/roles_provider.dart';
 import 'package:fox_tales/screens/register_screen.dart';
 import 'package:fox_tales/screens/upload_screen.dart';
+import 'package:fox_tales/screens/users_screen.dart';
 
 class MainDrawer extends ConsumerStatefulWidget {
   const MainDrawer({super.key});
@@ -28,6 +29,11 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
       label: "Register New User",
       screen: const RegisterScreen(),
     ),
+    Screen(
+      icon: const Icon(Icons.supervised_user_circle),
+      label: 'User Management',
+      screen: const UsersScreen(),
+    )
   ];
 
   final _uid = FirebaseAuth.instance.currentUser!.uid;
