@@ -37,12 +37,13 @@ class _AddGroupScreenState extends ConsumerState<AddGroupScreen> {
     existingGroups.add({
       'name': _name,
       'members': _members,
+      'lastMessage': "You have been added to group '$_name'."
     });
 
     await groupRef.update({'groupData': existingGroups});
     await groupRef.collection(_name).add(ChatMessage(
           user: AppUser(name: 'system', uid: "-"),
-          message: "You have been added to group '$_name'",
+          message: "You have been added to group '$_name'.",
         ).toMap());
 
     if (!context.mounted) return;

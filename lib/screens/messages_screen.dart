@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fox_tales/data/colors.dart';
 import 'package:fox_tales/screens/add_group_screen.dart';
+import 'package:fox_tales/widgets/atoms/chat_group_teaser.dart';
 
 class MessagesScreen extends ConsumerStatefulWidget {
   const MessagesScreen({super.key});
@@ -41,7 +42,10 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
               return ListView.builder(
                   itemCount: groupData.length,
                   itemBuilder: (ctx, index) {
-                    return Text(groupData[index]['name']);
+                    return ChatGroupTeaser(
+                      name: groupData[index]['name'],
+                      lastMessage: groupData[index]['lastMessage'],
+                    );
                   });
             }),
         Positioned(
