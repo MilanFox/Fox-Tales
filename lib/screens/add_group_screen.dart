@@ -87,7 +87,9 @@ class _AddGroupScreenState extends ConsumerState<AddGroupScreen> {
                             ),
                             const Spacer(),
                             Icon(
-                              Icons.group_add,
+                              _members.contains(users[index].uid)
+                                  ? Icons.group_remove
+                                  : Icons.group_add,
                               color: _members.contains(users[index].uid)
                                   ? primary
                                   : Colors.black,
