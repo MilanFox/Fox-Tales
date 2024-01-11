@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fox_tales/data/colors.dart';
@@ -17,6 +18,32 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        StreamBuilder(
+            stream:
+                FirebaseFirestore.instance.collection('messages').snapshots(),
+            builder: (ctx, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (!snapshot.hasData ||
+                  snapshot.data!.docs.isEmpty ||
+                  snapshot.hasError) {
+                return const Center(
+                  child: Center(child: Text('Data Fetching Error.')),
+                );
+              }
+
+              final groups =
+                  snapshot.data!.docs.firstWhere((doc) => doc.id == 'groups');
+              final groupData = groups['groupData'] as List<dynamic>;
+
+              return ListView.builder(
+                  itemCount: groupData.length,
+                  itemBuilder: (ctx, index) {
+                    return Text(groupData[index]['name']);
+                  });
+            }),
         Positioned(
           bottom: 16.0,
           right: 16.0,
@@ -32,9 +59,6 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
               color: primary,
             ),
           ),
-        ),
-        const Center(
-          child: Text("You have not been added to any groups yet."),
         ),
       ],
     );
