@@ -5,7 +5,6 @@ import 'package:fox_tales/models/chat_message.dart';
 import 'package:fox_tales/models/user.dart';
 import 'package:fox_tales/services/chat_service.dart';
 import 'package:fox_tales/widgets/atoms/message_bubble.dart';
-import 'package:path/path.dart';
 
 class Chat extends StatefulWidget {
   const Chat(this.name, {super.key});
