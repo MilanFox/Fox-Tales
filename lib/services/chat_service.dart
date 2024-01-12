@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fox_tales/models/chat_message.dart';
 import 'package:fox_tales/models/user.dart';
 
-final groupsRef =
+final chatGroupsRef =
     FirebaseFirestore.instance.collection('messages').doc('groups');
 
 Future getDataOfRef(DocumentReference<Map<String, dynamic>> ref) async {
@@ -11,18 +11,18 @@ Future getDataOfRef(DocumentReference<Map<String, dynamic>> ref) async {
 }
 
 Future updateLastMessageOnGroup(String group, String message) async {
-  final groupData = await getDataOfRef(groupsRef);
+  final groupData = await getDataOfRef(chatGroupsRef);
   groupData['groupData'][group]['lastMessage'] = message;
-  await groupsRef.update(groupData);
+  await chatGroupsRef.update(groupData);
 }
 
 Future sendChatMessage(String group, ChatMessage chatMessage) async {
-  await groupsRef.collection(group).add(chatMessage.toMap());
+  await chatGroupsRef.collection(group).add(chatMessage.toMap());
   await updateLastMessageOnGroup(group, chatMessage.message);
 }
 
 Future createNewGroup(String name, List<String> members) async {
-  final groupData = await getDataOfRef(groupsRef);
+  final groupData = await getDataOfRef(chatGroupsRef);
 
   groupData['groupData'][name] = {
     'name': name,
@@ -30,8 +30,8 @@ Future createNewGroup(String name, List<String> members) async {
     'lastMessage': "You have been added to group '$name'."
   };
 
-  await groupsRef.update(groupData);
-  await groupsRef.collection(name).add(ChatMessage(
+  await chatGroupsRef.update(groupData);
+  await chatGroupsRef.collection(name).add(ChatMessage(
         user: AppUser(name: 'system', uid: "-"),
         message: "You have been added to group '$name'.",
       ).toMap());
