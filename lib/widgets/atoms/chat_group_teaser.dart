@@ -20,6 +20,9 @@ class ChatGroupTeaser extends StatelessWidget {
         }));
       },
       child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(width: 1, color: Colors.white),
+        ),
         padding: const EdgeInsets.only(right: 16, bottom: 16, left: 16),
         child: Row(
           children: [
