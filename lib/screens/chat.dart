@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fox_tales/models/chat_message.dart';
 import 'package:fox_tales/models/user.dart';
 import 'package:fox_tales/services/chat_service.dart';
+import 'package:fox_tales/widgets/atoms/chat_system_message.dart';
 import 'package:fox_tales/widgets/atoms/message_bubble.dart';
 
 class Chat extends StatefulWidget {
@@ -75,7 +76,16 @@ class _ChatState extends State<Chat> {
                             message: messages[index]['message'],
                             timestamp: messages[index]['timestamp']);
 
-                        return MessageBubble(message);
+                        if (messages[index]['user']['uid'] == "-") {
+                          return ChatSystemMessage(
+                              (messages[index]['message']));
+                        }
+
+                        return index == 0 ||
+                                messages[index]['user']['uid'] !=
+                                    messages[index - 1]['user']['uid']
+                            ? MessageBubble.first(message)
+                            : MessageBubble.next(message);
                       },
                     ),
                   ),
