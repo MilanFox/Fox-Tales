@@ -37,7 +37,10 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
 
               final groups =
                   snapshot.data!.docs.firstWhere((doc) => doc.id == 'groups');
-              final groupData = groups['groupData'] as List<dynamic>;
+              final groupData = groups['groupData']
+                  .entries
+                  .map((entry) => entry.value)
+                  .toList();
 
               return ListView.builder(
                   itemCount: groupData.length,

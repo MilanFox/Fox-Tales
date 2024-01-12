@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_tales/models/chat_message.dart';
 import 'package:fox_tales/models/user.dart';
+import 'package:fox_tales/services/chat_service.dart';
 import 'package:fox_tales/widgets/atoms/message_bubble.dart';
+import 'package:path/path.dart';
 
 class Chat extends StatefulWidget {
   const Chat(this.name, {super.key});
@@ -38,6 +41,7 @@ class _ChatState extends State<Chat> {
               .collection('messages')
               .doc('groups')
               .collection(widget.name)
+              .orderBy('timestamp')
               .snapshots(),
           builder: (context, snapshot) {
             final data = snapshot.data;
@@ -57,30 +61,60 @@ class _ChatState extends State<Chat> {
 
             final messages = data!.docs;
 
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: messages.length,
-                    itemBuilder: (ctx, index) {
-                      final message = ChatMessage(
-                          user: AppUser(
-                              name: messages[index]['user']['name'],
-                              uid: messages[index]['user']['uid']),
-                          message: messages[index]['message'],
-                          timestamp: messages[index]['timestamp']);
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: messages.length,
+                      itemBuilder: (ctx, index) {
+                        final message = ChatMessage(
+                            user: AppUser(
+                                name: messages[index]['user']['name'],
+                                uid: messages[index]['user']['uid']),
+                            message: messages[index]['message'],
+                            timestamp: messages[index]['timestamp']);
 
-                      return MessageBubble(message);
-                    },
+                        return MessageBubble(message);
+                      },
+                    ),
                   ),
-                ),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'New Message'),
-                  maxLines: 3,
-                  controller: _chatMessageController,
-                ),
-                const SizedBox(height: 20),
-              ],
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration:
+                              const InputDecoration(labelText: 'New Message'),
+                          maxLines: 1,
+                          controller: _chatMessageController,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.attach_file),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          final currentUser = FirebaseAuth.instance.currentUser;
+                          final user = AppUser(
+                              name: currentUser!.displayName!,
+                              uid: currentUser.uid);
+                          final message = ChatMessage(
+                            user: user,
+                            message: _chatMessageController.text,
+                          );
+
+                          sendChatMessage(widget.name, message);
+                          _chatMessageController.clear();
+                          FocusScope.of(context).unfocus();
+                        },
+                        icon: const Icon(Icons.send),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             );
           },
         ));

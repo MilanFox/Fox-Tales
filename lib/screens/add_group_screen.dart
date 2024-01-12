@@ -3,9 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fox_tales/data/colors.dart';
-import 'package:fox_tales/models/chat_message.dart';
-import 'package:fox_tales/models/user.dart';
 import 'package:fox_tales/providers/users_provider.dart';
+import 'package:fox_tales/services/chat_service.dart';
 
 class AddGroupScreen extends ConsumerStatefulWidget {
   const AddGroupScreen({super.key});
@@ -21,28 +20,12 @@ class _AddGroupScreenState extends ConsumerState<AddGroupScreen> {
   final _members = [FirebaseAuth.instance.currentUser!.uid];
   String _name = "";
 
-  void _createGroup() async {
+  Future _createGroup() async {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) return;
     _formKey.currentState!.save();
 
-    final groupRef =
-        FirebaseFirestore.instance.collection('messages').doc('groups');
-
-    final groupDoc = await groupRef.get();
-    final existingGroups = List.from(groupDoc.data()?['groupData'] ?? []);
-
-    existingGroups.add({
-      'name': _name,
-      'members': _members,
-      'lastMessage': "You have been added to group '$_name'."
-    });
-
-    await groupRef.update({'groupData': existingGroups});
-    await groupRef.collection(_name).add(ChatMessage(
-          user: AppUser(name: 'system', uid: "-"),
-          message: "You have been added to group '$_name'.",
-        ).toMap());
+    await createNewGroup(_name, _members);
 
     if (!context.mounted) return;
     Navigator.of(context).pop();
