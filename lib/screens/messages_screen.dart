@@ -49,18 +49,19 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
                   .where((element) => element['members'].contains(currentUser))
                   .toList();
 
-              return filteredGroups.length > 1
-                  ? ListView.builder(
-                      itemCount: filteredGroups.length,
-                      itemBuilder: (ctx, index) {
-                        return ChatGroupTeaser(
-                          name: filteredGroups[index]['name'],
-                          lastMessage: filteredGroups[index]['lastMessage'],
-                        );
-                      })
-                  : const Center(
-                      child: Text('You have not been added to any groups yet.'),
+              if (filteredGroups.isEmpty) {
+                return const Center(
+                    child: Text('You have not been added to any groups yet.'));
+              }
+
+              return ListView.builder(
+                  itemCount: filteredGroups.length,
+                  itemBuilder: (ctx, index) {
+                    return ChatGroupTeaser(
+                      name: filteredGroups[index]['name'],
+                      lastMessage: filteredGroups[index]['lastMessage'],
                     );
+                  });
             }),
         Positioned(
           bottom: 16.0,
