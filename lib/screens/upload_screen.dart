@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fox_tales/services/image_service.dart';
 import 'package:fox_tales/widgets/atoms/button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fox_tales/data/colors.dart';
@@ -48,24 +49,7 @@ class _UploadScreenState extends State<UploadScreen> {
       _isLoading = true;
     });
 
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child('public_feed')
-        .child('assets')
-        .child('${DateTime.now()}.jpg');
-
-    await storageRef.putFile(_image!);
-    final imageURL = await storageRef.getDownloadURL();
-
-    FirebaseFirestore.instance
-        .collection('public_feed')
-        .doc(DateTime.now().millisecondsSinceEpoch.toString())
-        .set({
-      'imageUrl': imageURL,
-      'description': _descriptionController.text,
-      'createdAt': DateFormat('dd.MM.yyyy').format(DateTime.now()),
-      'timestamp': DateTime.now().millisecondsSinceEpoch
-    });
+    uploadImage('public_feed', _image!, _descriptionController.text);
 
     setState(() {
       _isLoading = false;
