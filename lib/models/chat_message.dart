@@ -1,4 +1,5 @@
 import 'package:fox_tales/models/user.dart';
+import 'package:intl/intl.dart';
 
 class ChatMessage {
   ChatMessage({
@@ -18,4 +19,10 @@ class ChatMessage {
       'timestamp': timestamp,
     };
   }
+
+  String getDate() => DateFormat('dd.MM.yy')
+      .format(DateTime.fromMillisecondsSinceEpoch(timestamp));
+
+  String getTime() => DateFormat('HH:mm')
+      .format(DateTime.fromMillisecondsSinceEpoch(timestamp));
 }

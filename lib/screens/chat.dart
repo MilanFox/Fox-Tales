@@ -6,6 +6,7 @@ import 'package:fox_tales/models/user.dart';
 import 'package:fox_tales/services/chat_service.dart';
 import 'package:fox_tales/widgets/atoms/chat_system_message.dart';
 import 'package:fox_tales/widgets/atoms/message_bubble.dart';
+import 'package:intl/intl.dart';
 
 class Chat extends StatefulWidget {
   const Chat(this.name, {super.key});
@@ -83,7 +84,13 @@ class _ChatState extends State<Chat> {
 
                         return index == 0 ||
                                 messages[index]['user']['uid'] !=
-                                    messages[index - 1]['user']['uid']
+                                    messages[index - 1]['user']['uid'] ||
+                                DateFormat('dd.MM.yy').format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            messages[index]['timestamp'])) !=
+                                    DateFormat('dd.MM.yy').format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            messages[index - 1]['timestamp']))
                             ? MessageBubble.first(message)
                             : MessageBubble.next(message);
                       },

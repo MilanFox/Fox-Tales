@@ -30,24 +30,36 @@ class MessageBubble extends StatelessWidget {
           children: [
             if (isFirstInSequence) const SizedBox(height: 18),
             if (isFirstInSequence)
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 13,
-                  right: 13,
-                ),
-                child: Text(
-                  chatMessage.user.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+              Row(
+                textDirection: isMe ? TextDirection.ltr : TextDirection.rtl,
+                children: [
+                  Text(
+                    chatMessage.getDate(),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w200,
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 13,
+                      right: 13,
+                    ),
+                    child: Text(
+                      chatMessage.user.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             Container(
               decoration: BoxDecoration(
                 color: isMe
                     ? Colors.grey[300]
-                    : theme.colorScheme.secondary.withAlpha(200),
+                    : theme.colorScheme.primary.withAlpha(200),
                 borderRadius: BorderRadius.only(
                   topLeft: !isMe && isFirstInSequence
                       ? Radius.zero
@@ -68,13 +80,29 @@ class MessageBubble extends StatelessWidget {
                 vertical: 2,
                 horizontal: 12,
               ),
-              child: Text(
-                chatMessage.message,
-                style: TextStyle(
-                  height: 1.3,
-                  color: isMe ? Colors.black87 : theme.colorScheme.onSecondary,
-                ),
-                softWrap: true,
+              child: Column(
+                crossAxisAlignment:
+                    isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    chatMessage.message,
+                    style: TextStyle(
+                      height: 1.3,
+                      color:
+                          isMe ? Colors.black87 : theme.colorScheme.onPrimary,
+                    ),
+                    softWrap: true,
+                  ),
+                  Text(
+                    chatMessage.getTime(),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w200,
+                      color:
+                          isMe ? Colors.black87 : theme.colorScheme.onPrimary,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

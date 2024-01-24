@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_tales/services/image_service.dart';
 import 'package:fox_tales/widgets/atoms/button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fox_tales/data/colors.dart';
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:intl/intl.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
