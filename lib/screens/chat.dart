@@ -81,121 +81,124 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(widget.name),
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(widget.name),
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-        ),
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('messages')
-              .doc('groups')
-              .collection(widget.name)
-              .orderBy('timestamp', descending: true)
-              .snapshots(),
-          builder: (context, snapshot) {
-            final data = snapshot.data;
+        surfaceTintColor: Colors.white,
+      ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('messages')
+            .doc('groups')
+            .collection(widget.name)
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          final data = snapshot.data;
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text('No messages found'));
-            }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No messages found'));
+          }
 
-            if (snapshot.hasError) {
-              return const Center(
-                  child: Text('Error while fetching the data.'));
-            }
+          if (snapshot.hasError) {
+            return const Center(child: Text('Error while fetching the data.'));
+          }
 
-            final messages = data!.docs;
+          final messages = data!.docs;
 
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      reverse: true,
-                      itemCount: messages.length,
-                      itemBuilder: (ctx, index) {
-                        final message = ChatMessage(
-                            user: AppUser(
-                                name: messages[index]['user']['name'],
-                                uid: messages[index]['user']['uid']),
-                            message: messages[index]['message'],
-                            timestamp: messages[index]['timestamp'],
-                            mediaLink: messages[index]['mediaLink']);
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    reverse: true,
+                    itemCount: messages.length,
+                    itemBuilder: (ctx, index) {
+                      final message = ChatMessage(
+                          user: AppUser(
+                              name: messages[index]['user']['name'],
+                              uid: messages[index]['user']['uid']),
+                          message: messages[index]['message'],
+                          timestamp: messages[index]['timestamp'],
+                          mediaLink: messages[index]['mediaLink']);
 
-                        if (messages[index]['user']['uid'] == "-") {
-                          return ChatSystemMessage(
-                              (messages[index]['message']));
-                        }
+                      if (messages[index]['user']['uid'] == "-") {
+                        return ChatSystemMessage((messages[index]['message']));
+                      }
 
-                        return index == 0 ||
-                                messages[index]['user']['uid'] !=
-                                    messages[index - 1]['user']['uid'] ||
-                                DateFormat('dd.MM.yy').format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            messages[index]['timestamp'])) !=
-                                    DateFormat('dd.MM.yy').format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            messages[index - 1]['timestamp']))
-                            ? MessageBubble.first(message)
-                            : MessageBubble.next(message);
-                      },
+                      final isFirstMessage = index == messages.length - 1;
+                      final isDifferentUserThanPrev = message.user.uid !=
+                          messages[index + 1]['user']['uid'];
+                      final isDifferentDateThanPrev = DateFormat('dd.MM.yy')
+                              .format(DateTime.fromMillisecondsSinceEpoch(
+                                  messages[index]['timestamp'])) !=
+                          DateFormat('dd.MM.yy').format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  messages[index + 1]['timestamp']));
+
+                      return isFirstMessage ||
+                              isDifferentUserThanPrev ||
+                              isDifferentDateThanPrev
+                          ? MessageBubble.first(message)
+                          : MessageBubble.next(message);
+                    },
+                  ),
+                ),
+                Row(
+                  children: [
+                    if (_image != null)
+                      badges.Badge(
+                        badgeContent: const Icon(Icons.close, size: 15),
+                        badgeStyle: const badges.BadgeStyle(
+                          badgeColor: Colors.white,
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 0.5),
+                        ),
+                        position: badges.BadgePosition.topEnd(),
+                        onTap: () {
+                          setState(() {
+                            _image = null;
+                          });
+                        },
+                        child: SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: Image.file(_image!, fit: BoxFit.cover),
+                        ),
+                      ),
+                    if (_image != null) const SizedBox(width: 20),
+                    Expanded(
+                      child: TextField(
+                        decoration:
+                            const InputDecoration(labelText: 'New Message'),
+                        maxLines: 1,
+                        controller: _chatMessageController,
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      if (_image != null)
-                        badges.Badge(
-                          badgeContent: const Icon(Icons.close, size: 15),
-                          badgeStyle: const badges.BadgeStyle(
-                            badgeColor: Colors.white,
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 0.5),
+                    IconButton(
+                      onPressed: _pickImage,
+                      icon: const Icon(Icons.attach_file),
+                    ),
+                    _isLoading
+                        ? const CircularProgressIndicator()
+                        : IconButton(
+                            onPressed: _sendMessage,
+                            icon: const Icon(Icons.send),
+                            color: primary,
                           ),
-                          position: badges.BadgePosition.topEnd(),
-                          onTap: () {
-                            setState(() {
-                              _image = null;
-                            });
-                          },
-                          child: SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: Image.file(_image!, fit: BoxFit.cover),
-                          ),
-                        ),
-                      if (_image != null) const SizedBox(width: 20),
-                      Expanded(
-                        child: TextField(
-                          decoration:
-                              const InputDecoration(labelText: 'New Message'),
-                          maxLines: 1,
-                          controller: _chatMessageController,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: _pickImage,
-                        icon: const Icon(Icons.attach_file),
-                      ),
-                      _isLoading
-                          ? const CircularProgressIndicator()
-                          : IconButton(
-                              onPressed: _sendMessage,
-                              icon: const Icon(Icons.send),
-                              color: primary,
-                            ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        ));
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
