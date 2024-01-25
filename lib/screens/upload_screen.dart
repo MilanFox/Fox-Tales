@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_tales/services/image_service.dart';
 import 'package:fox_tales/widgets/atoms/button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fox_tales/data/colors.dart';
 import 'dart:io';
+
+import 'package:intl/intl.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -29,8 +32,8 @@ class _UploadScreenState extends State<UploadScreen> {
     final imagePicker = ImagePicker();
     final pickedImage = await imagePicker.pickImage(
       source: ImageSource.gallery,
-      maxWidth: 500,
-      maxHeight: 500,
+      maxWidth: 1000,
+      maxHeight: 1000,
     );
 
     if (pickedImage == null) return;
@@ -46,7 +49,17 @@ class _UploadScreenState extends State<UploadScreen> {
       _isLoading = true;
     });
 
-    uploadImage('public_feed', _image!, _descriptionController.text);
+    final imageURL = await uploadImage('public_feed', _image!);
+
+    FirebaseFirestore.instance
+        .collection('public_feed')
+        .doc(DateTime.now().millisecondsSinceEpoch.toString())
+        .set({
+      'imageUrl': imageURL,
+      'description': _descriptionController.text,
+      'createdAt': DateFormat('dd.MM.yyyy').format(DateTime.now()),
+      'timestamp': DateTime.now().millisecondsSinceEpoch
+    });
 
     setState(() {
       _isLoading = false;
@@ -70,16 +83,16 @@ class _UploadScreenState extends State<UploadScreen> {
           child: Column(
             children: [
               Container(
-                  height: 250,
-                  width: double.infinity,
-                  decoration: BoxDecoration(border: Border.all(width: 1)),
-                  child: InkWell(
-                    onTap: _pickImage,
-                    child: _image == null
-                        ? const Icon(Icons.image_search,
-                            size: 50, color: primary)
-                        : Image.file(_image!, fit: BoxFit.contain),
-                  )),
+                height: 250,
+                width: double.infinity,
+                decoration: BoxDecoration(border: Border.all(width: 1)),
+                child: InkWell(
+                  onTap: _pickImage,
+                  child: _image == null
+                      ? const Icon(Icons.image_search, size: 50, color: primary)
+                      : Image.file(_image!, fit: BoxFit.contain),
+                ),
+              ),
               SizedBox(
                 child: TextField(
                   decoration: const InputDecoration(labelText: 'Description'),

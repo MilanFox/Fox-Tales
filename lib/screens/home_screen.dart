@@ -36,15 +36,17 @@ class _HomeScreenState extends State<HomeScreen> {
           final feed = feedSnapshot.data!.docs;
 
           return ListView.builder(
-              itemCount: feed.length,
-              itemBuilder: (ctx, index) {
-                Post entry = Post(
-                    description: feed[index]['description'],
-                    imageUrl: feed[index]['imageUrl'],
-                    createdAt: feed[index]['createdAt'],
-                    timeStamp: feed[index]['timestamp']);
-                return FeedEntry(entry);
-              });
+            itemCount: feed.length,
+            reverse: true,
+            itemBuilder: (ctx, index) {
+              Post entry = Post(
+                  description: feed[index]['description'],
+                  imageUrl: feed[index]['imageUrl'],
+                  createdAt: feed[index]['createdAt'],
+                  timeStamp: feed[index]['timestamp']);
+              return FeedEntry(entry);
+            },
+          );
         });
   }
 }

@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fox_tales/data/colors.dart';
 import 'package:fox_tales/models/chat_message.dart';
 import 'package:fox_tales/models/user.dart';
 import 'package:fox_tales/services/chat_service.dart';
+import 'package:fox_tales/services/image_service.dart';
 import 'package:fox_tales/widgets/atoms/chat_system_message.dart';
 import 'package:fox_tales/widgets/atoms/message_bubble.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:badges/badges.dart' as badges;
 
 class Chat extends StatefulWidget {
   const Chat(this.name, {super.key});
@@ -21,11 +27,55 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final _chatMessageController = TextEditingController();
+  File? _image;
+  bool _isLoading = false;
 
   @override
   void dispose() {
     _chatMessageController.dispose();
     super.dispose();
+  }
+
+  void _pickImage() async {
+    final imagePicker = ImagePicker();
+    final pickedImage = await imagePicker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1000,
+      maxHeight: 1000,
+    );
+
+    if (pickedImage == null) return;
+
+    setState(() {
+      _image = File(pickedImage.path);
+    });
+  }
+
+  Future _sendMessage() async {
+    if (_chatMessageController.text == "" && _image == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final user = AppUser(name: currentUser!.displayName!, uid: currentUser.uid);
+
+    String? imageURL;
+    if (_image != null) {
+      imageURL = await uploadImage('chats', _image!);
+    }
+
+    final message = ChatMessage(
+        user: user, message: _chatMessageController.text, mediaLink: imageURL);
+
+    sendChatMessage(widget.name, message);
+    _chatMessageController.clear();
+
+    setState(() {
+      _image = null;
+      _isLoading = false;
+    });
   }
 
   @override
@@ -42,7 +92,7 @@ class _ChatState extends State<Chat> {
               .collection('messages')
               .doc('groups')
               .collection(widget.name)
-              .orderBy('timestamp')
+              .orderBy('timestamp', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
             final data = snapshot.data;
@@ -68,6 +118,7 @@ class _ChatState extends State<Chat> {
                 children: [
                   Expanded(
                     child: ListView.builder(
+                      reverse: true,
                       itemCount: messages.length,
                       itemBuilder: (ctx, index) {
                         final message = ChatMessage(
@@ -75,7 +126,8 @@ class _ChatState extends State<Chat> {
                                 name: messages[index]['user']['name'],
                                 uid: messages[index]['user']['uid']),
                             message: messages[index]['message'],
-                            timestamp: messages[index]['timestamp']);
+                            timestamp: messages[index]['timestamp'],
+                            mediaLink: messages[index]['mediaLink']);
 
                         if (messages[index]['user']['uid'] == "-") {
                           return ChatSystemMessage(
@@ -98,6 +150,27 @@ class _ChatState extends State<Chat> {
                   ),
                   Row(
                     children: [
+                      if (_image != null)
+                        badges.Badge(
+                          badgeContent: const Icon(Icons.close, size: 15),
+                          badgeStyle: const badges.BadgeStyle(
+                            badgeColor: Colors.white,
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 0.5),
+                          ),
+                          position: badges.BadgePosition.topEnd(),
+                          onTap: () {
+                            setState(() {
+                              _image = null;
+                            });
+                          },
+                          child: SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: Image.file(_image!, fit: BoxFit.cover),
+                          ),
+                        ),
+                      if (_image != null) const SizedBox(width: 20),
                       Expanded(
                         child: TextField(
                           decoration:
@@ -107,26 +180,16 @@ class _ChatState extends State<Chat> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: _pickImage,
                         icon: const Icon(Icons.attach_file),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          final currentUser = FirebaseAuth.instance.currentUser;
-                          final user = AppUser(
-                              name: currentUser!.displayName!,
-                              uid: currentUser.uid);
-                          final message = ChatMessage(
-                            user: user,
-                            message: _chatMessageController.text,
-                          );
-
-                          sendChatMessage(widget.name, message);
-                          _chatMessageController.clear();
-                          FocusScope.of(context).unfocus();
-                        },
-                        icon: const Icon(Icons.send),
-                      ),
+                      _isLoading
+                          ? const CircularProgressIndicator()
+                          : IconButton(
+                              onPressed: _sendMessage,
+                              icon: const Icon(Icons.send),
+                              color: primary,
+                            ),
                     ],
                   ),
                 ],

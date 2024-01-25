@@ -12,7 +12,8 @@ Future getDataOfRef(DocumentReference<Map<String, dynamic>> ref) async {
 
 Future updateLastMessageOnGroup(String group, String message) async {
   final groupData = await getDataOfRef(chatGroupsRef);
-  groupData['groupData'][group]['lastMessage'] = message;
+  final lastMessage = message == "" ? "New Message" : message;
+  groupData['groupData'][group]['lastMessage'] = lastMessage;
   await chatGroupsRef.update(groupData);
 }
 
