@@ -9,6 +9,8 @@ import 'package:fox_tales/widgets/molecules/main_navigation.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,11 @@ Future main() async {
   FirebaseFirestore.instance.settings =
       const Settings(persistenceEnabled: true);
   runApp(const ProviderScope(child: App()));
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    if (Platform.isAndroid) {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+  });
 }
 
 class App extends StatelessWidget {
