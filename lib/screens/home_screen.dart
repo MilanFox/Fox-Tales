@@ -37,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
           return ListView.builder(
             itemCount: feed.length,
-            reverse: true,
             itemBuilder: (ctx, index) {
               Post entry = Post(
                   description: feed[index]['description'],

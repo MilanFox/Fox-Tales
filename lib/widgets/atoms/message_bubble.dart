@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fox_tales/models/chat_message.dart';
@@ -84,8 +85,13 @@ class MessageBubble extends StatelessWidget {
               if (chatMessage.mediaLink != "" && chatMessage.mediaLink != null)
                 Container(
                   margin: const EdgeInsets.only(bottom: 10),
-                  width: double.infinity,
-                  child: Image.network(chatMessage.mediaLink!),
+                  child: CachedNetworkImage(
+                    imageUrl: chatMessage.mediaLink!,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
               if (chatMessage.message != "")
                 Text(
