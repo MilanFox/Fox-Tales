@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:853253749657:android:3f5447b1239ee58830b108",
         "android_client_info": {
-          "package_name": "com.example.fox_tales"
+          "package_name": "org.fox_cloud.foxtales"
         }
       },
       "oauth_client": [],

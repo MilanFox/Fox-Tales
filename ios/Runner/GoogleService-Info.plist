@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.foxTales</string>
+	<string>org.fox_cloud.foxtales</string>
 	<key>PROJECT_ID</key>
 	<string>foxtales-app</string>
 	<key>STORAGE_BUCKET</key>

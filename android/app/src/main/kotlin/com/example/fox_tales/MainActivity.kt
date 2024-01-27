@@ -1,4 +1,4 @@
-package com.example.fox_tales
+package org.fox_cloud.foxtales
 
 import io.flutter.embedding.android.FlutterActivity
 
