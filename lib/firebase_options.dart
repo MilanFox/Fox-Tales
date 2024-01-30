@@ -59,12 +59,12 @@ class DefaultFirebaseOptions {
     storageBucket: dotenv.env['ANDROID_STORAGE_BUCKET']!,
   );
 
-  static FirebaseOptions ios = FirebaseOptions(
-    apiKey: dotenv.env['IOS_API_KEY']!,
-    appId: dotenv.env['IOS_APP_ID']!,
-    messagingSenderId: dotenv.env['IOS_MESSAGING_SENDER_ID']!,
-    projectId: dotenv.env['IOS_PROJECT_ID']!,
-    storageBucket: dotenv.env['IOS_STORAGE_BUCKET']!,
-    iosBundleId: dotenv.env['IOS_BUNDLE_ID']!,
+  static FirebaseOptions ios = const FirebaseOptions(
+    apiKey: "AIzaSyB4Gg7_u3Af4JoDgg3McPNQ2AV2_uoPQuo",
+    appId: "1:853253749657:ios:e022841d10ee993b30b108",
+    messagingSenderId: "853253749657",
+    projectId: "foxtales-app",
+    storageBucket: "foxtales-app.appspot.com",
+    iosBundleId: "com.example.foxTales",
   );
 }
