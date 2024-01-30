@@ -142,11 +142,54 @@ class _ChatState extends State<Chat> {
                               DateTime.fromMillisecondsSinceEpoch(
                                   messages[index + 1]['timestamp']));
 
-                      return isFirstMessage ||
+                      final messageBubble = isFirstMessage ||
                               isDifferentUserThanPrev ||
                               isDifferentDateThanPrev
                           ? MessageBubble.first(message)
                           : MessageBubble.next(message);
+
+                      return GestureDetector(
+                        onLongPress: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Delete Message?"),
+                                content: const Text(
+                                    "Do you really want to delete the message? It will be deleted permanently and will not be recoverable."),
+                                surfaceTintColor: Colors.white,
+                                actions: [
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      deleteMessage(
+                                          widget.name,
+                                          messages[index].id,
+                                          messages[index]['user']['name']);
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(Icons.delete_forever),
+                                    label: const Text("Delete permanently"),
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.restart_alt,
+                                      color: Colors.black,
+                                    ),
+                                    label: const Text(
+                                      "Go back",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: messageBubble,
+                      );
                     },
                   ),
                 ),

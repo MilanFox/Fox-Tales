@@ -8,10 +8,12 @@ class ChatSystemMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      message,
-      textAlign: TextAlign.center,
-      style: const TextStyle(color: primary),
-    );
+    return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Text(
+          message,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: primary, fontStyle: FontStyle.italic),
+        ));
   }
 }

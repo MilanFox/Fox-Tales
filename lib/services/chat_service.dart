@@ -37,3 +37,10 @@ Future createNewGroup(String name, List<String> members) async {
         message: "You have been added to group '$name'.",
       ).toMap());
 }
+
+Future deleteMessage(group, messageID, name) async {
+  await chatGroupsRef.collection(group).doc(messageID).update({
+    "message": "A message has been deleted by $name.",
+    "user": {"name": "system", "uid": "-"}
+  });
+}
