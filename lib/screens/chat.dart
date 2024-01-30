@@ -150,6 +150,8 @@ class _ChatState extends State<Chat> {
 
                       return GestureDetector(
                         onLongPress: () {
+                          if (FirebaseAuth.instance.currentUser!.uid !=
+                              messages[index]['user']['uid']) return;
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
