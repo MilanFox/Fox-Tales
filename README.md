@@ -1,16 +1,30 @@
-# fox_tales
+![feature.png](assets/readme/feature.png)
 
-A new Flutter project.
+This was a learning project for both Flutter / App Development as well as Google Firebase.
+It is no longer being maintained but stying up in case someone finds something of worth in here.
+Feel free to explore, modify, and use any code you find here for your own learning and projects.
 
-## Getting Started
+## Whats the project?
 
-This project is a starting point for a Flutter application.
+While waiting for our firstborn to arrive I wanted to find out how hard it would be to build a
+light social media style / messaging app to safely share videos & images with friends and family.
 
-A few resources to get you started if this is your first Flutter project:
+## Whats the state of the project?
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Since I used it as a learning exercise I did finish it to an MVP State, even after deciding to not follow through.
+Every function featured in the screenshots does function properly and it is installable on both Android and IOS.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Why was it discontinued?
+
+Turns out, app development is not fun at all.
+And needing to pay 100EUR p.a. just to be able to release it on IOS was the nail in the coffin.
+
+## Features
+### Auth
+
+<img src="assets/readme/auth.png" align="left" width="200px" style="margin-right: 15px;"/>
+We are using Firebase Authentication to make sure the content can only be accessed by registered users -
+only users with "admin" role can register new users.
+<br clear="left"/>
+
+A "newline". This text doesn't float anymore, is left-aligned.
