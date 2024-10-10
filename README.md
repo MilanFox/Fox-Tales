@@ -16,7 +16,7 @@ Every function featured in the screenshots does function properly and it is inst
 
 ## Why was it discontinued?
 
-Turns out, app development is not fun at all.
+Turns out, app development is not fun at all. I don't get how anyone enjoys Flutter..
 And needing to pay 100EUR p.a. just to be able to release it on IOS was the nail in the coffin.
 
 ## What Features are finished?
